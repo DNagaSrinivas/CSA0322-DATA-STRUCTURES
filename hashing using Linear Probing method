@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SIZE 10
+
+// Structure for representing a hash table entry
+struct hash_table_entry {
+    int key;
+    int value;
+};
+
+// Structure for representing a hash table
+struct hash_table {
+    struct hash_table_entry *table[SIZE];
+};
+
+// Function to create a new hash table
+struct hash_table* create_hash_table() {
+    struct hash_table *ht = (struct hash_table*)malloc(sizeof(struct hash_table));
+    for (int i = 0; i < SIZE; i++) {
+        ht->table[i] = NULL;
+    }
+    return ht;
+}
+
+// Function to calculate hash index
+int hash_function(int key) {
+    return key % SIZE;
+}
+
+// Function to insert a key-value pair into the hash table using linear probing
+void insert(struct hash_table *ht, int key, int value) {
+    int index = hash_function(key);
+    while (ht->table[index] != NULL) {
+        index = (index + 1) % SIZE;
+    }
+    struct hash_table_entry *new_entry = (struct hash_table_entry*)malloc(sizeof(struct hash_table_entry));
+    new_entry->key = key;
+    new_entry->value = value;
+    ht->table[index] = new_entry;
+}
+
+// Function to search for a key in the hash table
+int search(struct hash_table *ht, int key) {
+    int index = hash_function(key);
+    while (ht->table[index] != NULL) {
+        if (ht->table[index]->key == key) {
+            return ht->table[index]->value;
+        }
+        index = (index + 1) % SIZE;
+    }
+    return -1; // Key not found
+}
+
+// Function to display the contents of the hash table
+void display(struct hash_table *ht) {
+    printf("Hash Table:\n");
+    printf("Index\tKey\tValue\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d\t", i);
+        if (ht->table[i] != NULL) {
+            printf("%d\t%d\n", ht->table[i]->key, ht->table[i]->value);
+        } else {
+            printf("NULL\n");
+        }
+    }
+}
+
+int main() {
+    struct hash_table *ht = create_hash_table();
+
+    insert(ht, 5, 10);
+    insert(ht, 15, 20);
+    insert(ht, 25, 30);
+    insert(ht, 35, 40);
+    insert(ht, 6, 50);
+
+    display(ht);
+
+    int key_to_search = 15;
+    int result = search(ht, key_to_search);
+    if (result != -1) {
+        printf("Value for key %d: %d\n", key_to_search, result);
+    } else {
+        printf("Key %d not found\n", key_to_search);
+    }
+
+    return 0;
+}
