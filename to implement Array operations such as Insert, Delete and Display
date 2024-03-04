@@ -1,0 +1,69 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100
+
+// Function to display elements of array
+void display(int arr[], int size) {
+    printf("Array elements: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+// Function to insert an element at a specific position
+int insert(int arr[], int *size, int element, int position) {
+    if (*size >= MAX_SIZE) {
+        printf("Array overflow, can't insert element.\n");
+        return -1;
+    }
+    if (position < 0 || position > *size) {
+        printf("Invalid position.\n");
+        return -1;
+    }
+    // Shift elements to make space for the new element
+    for (int i = *size - 1; i >= position; i--) {
+        arr[i + 1] = arr[i];
+    }
+    arr[position] = element;
+    (*size)++;
+    return 0;
+}
+
+// Function to delete an element at a specific position
+int delete(int arr[], int *size, int position) {
+    if (*size <= 0) {
+        printf("Array underflow, can't delete element.\n");
+        return -1;
+    }
+    if (position < 0 || position >= *size) {
+        printf("Invalid position.\n");
+        return -1;
+    }
+    // Shift elements to overwrite the element at the specified position
+    for (int i = position; i < *size - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    (*size)--;
+    return 0;
+}
+
+int main() {
+    int arr[MAX_SIZE];
+    int size = 0;
+
+    // Inserting elements
+    insert(arr, &size, 10, 0); // Insert 10 at position 0
+    insert(arr, &size, 20, 1); // Insert 20 at position 1
+    insert(arr, &size, 30, 2); // Insert 30 at position 2
+    insert(arr, &size, 40, 3); // Insert 40 at position 3
+
+    display(arr, size); // Display the array
+
+    // Deleting an element
+    delete(arr, &size, 2); // Delete element at position 2
+
+    display(arr, size); // Display the array after deletion
+
+    return 0;
+}
